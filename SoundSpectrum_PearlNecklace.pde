@@ -142,7 +142,7 @@ void draw()
 }
 
 void drawEqBand(float x1, float y1, float x2, float y2, color c, PShape parent) {
-  PShape s = createShape(parent);
+  PShape s = createShape();
   s.setStroke(c);
   s.setStrokeWeight(2);
   s.beginShape();
