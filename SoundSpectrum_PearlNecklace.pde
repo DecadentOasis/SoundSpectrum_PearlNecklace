@@ -132,6 +132,12 @@ void draw()
     translate(0,0, abs(100*sin(radians(rot))));
     rotateZ(sin(radians(rot)));
     shape(s);
+    rotate(HALF_PI);
+    shape(s);
+    rotate(HALF_PI);
+    shape(s);
+    rotate(HALF_PI);
+    shape(s);
     popMatrix();
 
     if (currentPeak > maxPeak || ((System.nanoTime() - peakTime) > TIMESINCELASTPEAK )) {
