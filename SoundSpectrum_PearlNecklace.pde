@@ -104,11 +104,12 @@ void draw()
     int w = int(width/numRects);
     for (int i = 0; i < numRects; i++)
     {
+      float amp = (float)Math.log10((fftLog.getAvg(i)));
       fill((i * (100.0/numRects) + rot) % 100, 100, 100);
       // draw a rectangle for each average, multiply the value by spectrumScale so we can see it better
-      rect(i*w, height, i*w + w, height - fftLog.getAvg(i)*spectrumScale);
-      if (fftLog.getAvg(i) > currentPeak) {
-         currentPeak =  fftLog.getAvg(i);
+      rect(i*w, height, i*w + w, height - amp*spectrumScale);
+      if (amp > currentPeak) {
+         currentPeak =  amp;
       }
     }
     if (currentPeak > maxPeak || ((System.nanoTime() - peakTime) > TIMESINCELASTPEAK )) {
