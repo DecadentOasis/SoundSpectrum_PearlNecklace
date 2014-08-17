@@ -34,8 +34,10 @@ FFT fftLog;
 
 float height3;
 float height23;
-float spectrumScale = 6;
-
+float spectrumScale = 100; // initial value
+float maxPeak = 0;
+long peakTime = 0;
+final static long TIMESINCELASTPEAK = (1000000000 * 15); // 15 seconds
 PFont font;
 
 void setup()
@@ -76,6 +78,7 @@ void draw()
   textSize( 18 );
 
   float centerFrequency = 0;
+  float currentPeak = 0;
 
   // perform a forward FFT on the samples in jingle's mix buffer
   // note that if jingle were a MONO file, this would be the same as using jingle.left or jingle.right
@@ -97,7 +100,18 @@ void draw()
       fill(i * (100.0/numRects), 100, 100);
       // draw a rectangle for each average, multiply the value by spectrumScale so we can see it better
       rect(i*w, height, i*w + w, height - fftLog.getAvg(i)*spectrumScale);
+      if (fftLog.getAvg(i) > currentPeak) {
+         currentPeak =  fftLog.getAvg(i);
+      }
     }
+    if (currentPeak > maxPeak || ((System.nanoTime() - peakTime) > TIMESINCELASTPEAK )) {
+      maxPeak = currentPeak;
+      peakTime = System.nanoTime();
+    }
+    
+    // now we have a reasonable peak, let's figure out what the scale should be
+    spectrumScale = height / maxPeak;
+    
   }
 
 }
