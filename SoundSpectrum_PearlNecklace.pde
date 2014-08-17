@@ -40,9 +40,12 @@ long peakTime = 0;
 final static long TIMESINCELASTPEAK = (1000000000 * 15); // 15 seconds
 PFont font;
 
+int hLeds = 160;
+int vLeds = 40;
+
 void setup()
 {
-  size(512, 480);
+  size(hLeds * 3, vLeds * 6);
   height3 = height/3;
   height23 = 2*height/3;
 
@@ -66,7 +69,7 @@ void setup()
   // calculate averages based on a miminum octave width of 22 Hz
   // split each octave into three bands
   // this should result in 30 averages
-  fftLog.logAverages( 22, 3 );
+  fftLog.logAverages( 22, 6);
 
   rectMode(CORNERS);
   background(0);
@@ -100,7 +103,7 @@ void draw()
   // no more outline, we'll be doing filled rectangles from now
   noStroke();
 
-  float numRects = (fftLog.avgSize()/1.0);
+  float numRects = (fftLog.avgSize()/2.0);
   // draw the linear averages
   {
     // since linear averages group equal numbers of adjacent frequency bands
@@ -109,7 +112,10 @@ void draw()
     int w = int(width/numRects);
     for (int i = 0; i < numRects; i++)
     {
-      float amp = (float)Math.log10((fftLog.getAvg(i)));
+      //float amp = (float)Math.log10((fftLog.getAvg(i)));
+      //float amp = (float)Math.sqrt((fftLog.getAvg(i)));
+      float amp = (float)Math.pow((fftLog.getAvg(i)), 0.4);
+      //float amp = fftLog.getAvg(i);
       fill((i * (100.0/numRects) + rot) % 100, 100, 100);
       // draw a rectangle for each average, multiply the value by spectrumScale so we can see it better
       rect(i*w, height, i*w + w, height - (amp*spectrumScale));
