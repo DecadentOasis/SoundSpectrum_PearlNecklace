@@ -46,7 +46,7 @@ void setup()
   height3 = height/3;
   height23 = 2*height/3;
 
-  colorMode(HSB, 100);
+  colorMode(HSB, 100, 100, 100, 100);
 
   minim = new Minim(this);
   in = minim.getLineIn();
@@ -69,6 +69,7 @@ void setup()
   fftLog.logAverages( 22, 3 );
 
   rectMode(CORNERS);
+  background(0);
 }
 
 float rot = 0;
@@ -80,7 +81,11 @@ void draw()
   }
   rot += rotIncr;
   
-  background(0);
+  PImage c = get();
+  image(c, 0, 1);
+  
+  fill(0, 0, 0, 3);
+  rect(0, 0, width, height);
 
   textSize( 18 );
 
@@ -107,7 +112,7 @@ void draw()
       float amp = (float)Math.log10((fftLog.getAvg(i)));
       fill((i * (100.0/numRects) + rot) % 100, 100, 100);
       // draw a rectangle for each average, multiply the value by spectrumScale so we can see it better
-      rect(i*w, height, i*w + w, height - amp*spectrumScale);
+      rect(i*w, height, i*w + w, height - (amp*spectrumScale));
       if (amp > currentPeak) {
          currentPeak =  amp;
       }
