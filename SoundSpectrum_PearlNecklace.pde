@@ -64,9 +64,9 @@ public String sketchRenderer() {
 void setup()
 {
   //size(hLeds * 6, vLeds * 12, P3D);
-  cam = new PeasyCam(this, width/2.0, height/2.0, 0, 200);
+  cam = new PeasyCam(this, width/2.0, height/2.0, 0, 2000);
   cam.setMinimumDistance(50);
-  cam.setMaximumDistance(500);
+  cam.setMaximumDistance(50000);
   colorMode(HSB, 360, 100, 100, 100);
 
   minim = new Minim(this);
