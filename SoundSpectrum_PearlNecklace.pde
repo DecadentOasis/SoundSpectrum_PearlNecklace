@@ -25,7 +25,9 @@
 
 import ddf.minim.analysis.*;
 import ddf.minim.*;
+import peasy.*;
 
+PeasyCam cam;
 Minim minim;  
 AudioInput in;
 
@@ -43,13 +45,29 @@ PFont font;
 int hLeds = 160;
 int vLeds = 40;
 
+boolean sketchFullScreen() {
+  return true;
+}
+
+public int sketchWidth() {
+  return displayWidth;
+}
+
+public int sketchHeight() {
+  return displayHeight;
+}
+
+public String sketchRenderer() {
+  return P3D;
+}
+
 void setup()
 {
-  size(hLeds * 3, vLeds * 6);
-  height3 = height/3;
-  height23 = 2*height/3;
-
-  colorMode(HSB, 100, 100, 100, 100);
+  //size(hLeds * 6, vLeds * 12, P3D);
+  cam = new PeasyCam(this, width/2.0, height/2.0, 0, 200);
+  cam.setMinimumDistance(50);
+  cam.setMaximumDistance(500);
+  colorMode(HSB, 360, 100, 100, 100);
 
   minim = new Minim(this);
   in = minim.getLineIn();
@@ -76,18 +94,20 @@ void setup()
 }
 
 float rot = 0;
-float rotIncr = 0.1;
+float rotIncr = 0.4;
+float ROTMAX = 360;
+
 void draw()
 {
-  if (rot > 100) {
+  if (rot >= ROTMAX) {
     rot = 0.0;
   }
   rot += rotIncr;
-  
+
   PImage c = get();
   image(c, 0, 1);
-  
-  fill(0, 0, 0, 3);
+
+  fill(0, 0, 0, 2);
   rect(0, 0, width, height);
 
   textSize( 18 );
@@ -99,9 +119,9 @@ void draw()
   // note that if jingle were a MONO file, this would be the same as using jingle.left or jingle.right
   fftLin.forward( in.mix );
   fftLog.forward( in.mix );
-  
+
   // no more outline, we'll be doing filled rectangles from now
-  noStroke();
+  strokeWeight(2);
 
   float numRects = (fftLog.avgSize()/2.0);
   // draw the linear averages
@@ -110,29 +130,55 @@ void draw()
     // we can simply precalculate how many pixel wide each average's 
     // rectangle should be.
     int w = int(width/numRects);
+    PShape s = createShape(GROUP);
     for (int i = 0; i < numRects; i++)
     {
       //float amp = (float)Math.log10((fftLog.getAvg(i)));
       //float amp = (float)Math.sqrt((fftLog.getAvg(i)));
       float amp = (float)Math.pow((fftLog.getAvg(i)), 0.4);
       //float amp = fftLog.getAvg(i);
-      fill((i * (100.0/numRects) + rot) % 100, 100, 100);
+      //fill((i * (100.0/numRects) + rot) % 100, 100, 100);
+      color clr = color((i * (ROTMAX/numRects) + rot) % ROTMAX, 100, 100);
       // draw a rectangle for each average, multiply the value by spectrumScale so we can see it better
-      rect(i*w, height, i*w + w, height - (amp*spectrumScale));
+      //rect(i*w, height, i*w + w, height - (amp*spectrumScale));
+      drawEqBand(i*w, height, i*w +w, height - (amp*spectrumScale), clr, s);
       if (amp > currentPeak) {
-         currentPeak =  amp;
+        currentPeak =  amp;
       }
     }
+    pushMatrix();
+    translate(0, 0, abs(100*sin(radians(rot))));
+    rotateZ(radians(rot));
+    shape(s);
+    rotate(HALF_PI);
+    shape(s);
+    rotate(HALF_PI);
+    shape(s);
+    rotate(HALF_PI);
+    shape(s);
+    popMatrix();
+
     if (currentPeak > maxPeak || ((System.nanoTime() - peakTime) > TIMESINCELASTPEAK )) {
       maxPeak = currentPeak;
       peakTime = System.nanoTime();
     }
-    
+
     // now we have a reasonable peak, let's figure out what the scale should be
     spectrumScale = height / maxPeak;
-    
   }
-
 }
 
+void drawEqBand(float x1, float y1, float x2, float y2, color c, PShape parent) {
+  PShape s = createShape();
+  s.setStroke(c);
+  s.setStrokeWeight(2);
+  s.beginShape();
+  s.vertex(x1, y1);
+  s.vertex(x1, y2);
+  s.vertex(x2, y2);
+  s.vertex(x2, y1);
+  s.vertex(x1, y1);
+  s.endShape();
+  parent.addChild(s);
+}
 
