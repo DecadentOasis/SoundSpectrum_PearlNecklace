@@ -41,20 +41,18 @@ float maxPeak = 0;
 long peakTime = 0;
 final static long TIMESINCELASTPEAK = (1000000000 * 15); // 15 seconds
 PFont font;
-
-int hLeds = 160;
-int vLeds = 40;
+PreviewWindowFrame mPreviewWindowFrame;
 
 boolean sketchFullScreen() {
-  return true;
+  return false;
 }
 
 public int sketchWidth() {
-  return displayWidth;
+  return displayWidth/4;
 }
 
 public int sketchHeight() {
-  return displayHeight;
+  return displayHeight/4;
 }
 
 public String sketchRenderer() {
@@ -91,6 +89,8 @@ void setup()
 
   rectMode(CORNERS);
   background(0);
+  mPreviewWindowFrame = new PreviewWindowFrame();
+  
 }
 
 float rot = 0;
@@ -121,7 +121,7 @@ void draw()
   fftLog.forward( in.mix );
 
   // no more outline, we'll be doing filled rectangles from now
-  strokeWeight(2);
+  
 
   float numRects = (fftLog.avgSize()/2.0);
   // draw the linear averages
@@ -157,6 +157,8 @@ void draw()
     rotate(HALF_PI);
     shape(s);
     popMatrix();
+    
+    updatePreview();
 
     if (currentPeak > maxPeak || ((System.nanoTime() - peakTime) > TIMESINCELASTPEAK )) {
       maxPeak = currentPeak;
@@ -171,7 +173,7 @@ void draw()
 void drawEqBand(float x1, float y1, float x2, float y2, color c, PShape parent) {
   PShape s = createShape();
   s.setStroke(c);
-  s.setStrokeWeight(2);
+  s.setStrokeWeight(9);
   s.beginShape();
   s.vertex(x1, y1);
   s.vertex(x1, y2);
@@ -181,4 +183,5 @@ void drawEqBand(float x1, float y1, float x2, float y2, color c, PShape parent) 
   s.endShape();
   parent.addChild(s);
 }
+
 
