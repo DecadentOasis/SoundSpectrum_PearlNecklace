@@ -112,6 +112,7 @@ void draw()
     // we can simply precalculate how many pixel wide each average's 
     // rectangle should be.
     int w = int(width/numRects);
+    PShape s = createShape(GROUP);
     for (int i = 0; i < numRects; i++)
     {
       //float amp = (float)Math.log10((fftLog.getAvg(i)));
@@ -122,11 +123,12 @@ void draw()
       color clr = color((i * (100.0/numRects) + rot) % 100, 100, 100);
       // draw a rectangle for each average, multiply the value by spectrumScale so we can see it better
       //rect(i*w, height, i*w + w, height - (amp*spectrumScale));
-      drawEqBand(i*w, height, i*w +w, height - (amp*spectrumScale), clr);
+      drawEqBand(i*w, height, i*w +w, height - (amp*spectrumScale), clr, s);
       if (amp > currentPeak) {
          currentPeak =  amp;
       }
     }
+    shape(s);
     if (currentPeak > maxPeak || ((System.nanoTime() - peakTime) > TIMESINCELASTPEAK )) {
       maxPeak = currentPeak;
       peakTime = System.nanoTime();
@@ -139,17 +141,17 @@ void draw()
 
 }
 
-void drawEqBand(float x1, float y1, float x2, float y2, color c) {
-  PShape s = createShape();
-  s.beginShape();
+void drawEqBand(float x1, float y1, float x2, float y2, color c, PShape parent) {
+  PShape s = createShape(parent);
   s.setStroke(c);
   s.setStrokeWeight(2);
+  s.beginShape();
   s.vertex(x1, y1);
   s.vertex(x1, y2);
   s.vertex(x2, y2);
   s.vertex(x2, y1);
   s.vertex(x1, y1);
   s.endShape();
-  shape(s, 0, 0);
+  parent.addChild(s);
 }
 
