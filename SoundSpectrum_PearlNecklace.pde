@@ -77,11 +77,11 @@ void setup()
 
 float rot = 0;
 float rotIncr = 0.4;
-
+float ROTMAX = 360;
 
 void draw()
 {
-  if (rot >= 360) {
+  if (rot >= ROTMAX) {
     rot = 0.0;
   }
   rot += rotIncr;
@@ -120,7 +120,7 @@ void draw()
       float amp = (float)Math.pow((fftLog.getAvg(i)), 0.4);
       //float amp = fftLog.getAvg(i);
       //fill((i * (100.0/numRects) + rot) % 100, 100, 100);
-      color clr = color((i * (100.0/numRects) + rot) % 100, 100, 100);
+      color clr = color((i * (ROTMAX/numRects) + rot) % ROTMAX, 100, 100);
       // draw a rectangle for each average, multiply the value by spectrumScale so we can see it better
       //rect(i*w, height, i*w + w, height - (amp*spectrumScale));
       drawEqBand(i*w, height, i*w +w, height - (amp*spectrumScale), clr, s);
