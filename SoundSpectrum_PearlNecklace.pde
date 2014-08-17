@@ -71,8 +71,15 @@ void setup()
   rectMode(CORNERS);
 }
 
+float rot = 0;
+float rotIncr = 0.1;
 void draw()
 {
+  if (rot > 100) {
+    rot = 0.0;
+  }
+  rot += rotIncr;
+  
   background(0);
 
   textSize( 18 );
@@ -97,7 +104,7 @@ void draw()
     int w = int(width/numRects);
     for (int i = 0; i < numRects; i++)
     {
-      fill(i * (100.0/numRects), 100, 100);
+      fill((i * (100.0/numRects) + rot) % 100, 100, 100);
       // draw a rectangle for each average, multiply the value by spectrumScale so we can see it better
       rect(i*w, height, i*w + w, height - fftLog.getAvg(i)*spectrumScale);
       if (fftLog.getAvg(i) > currentPeak) {
