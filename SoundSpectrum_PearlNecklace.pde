@@ -45,7 +45,7 @@ int vLeds = 40;
 
 void setup()
 {
-  size(hLeds * 3, vLeds * 6);
+  size(hLeds * 3, vLeds * 6, P3D);
   height3 = height/3;
   height23 = 2*height/3;
 
@@ -77,6 +77,8 @@ void setup()
 
 float rot = 0;
 float rotIncr = 0.1;
+
+
 void draw()
 {
   if (rot > 100) {
@@ -87,7 +89,7 @@ void draw()
   PImage c = get();
   image(c, 0, 1);
   
-  fill(0, 0, 0, 3);
+  fill(0, 0, 0, 2);
   rect(0, 0, width, height);
 
   textSize( 18 );
@@ -101,7 +103,7 @@ void draw()
   fftLog.forward( in.mix );
   
   // no more outline, we'll be doing filled rectangles from now
-  noStroke();
+  strokeWeight(2);
 
   float numRects = (fftLog.avgSize()/2.0);
   // draw the linear averages
@@ -116,9 +118,11 @@ void draw()
       //float amp = (float)Math.sqrt((fftLog.getAvg(i)));
       float amp = (float)Math.pow((fftLog.getAvg(i)), 0.4);
       //float amp = fftLog.getAvg(i);
-      fill((i * (100.0/numRects) + rot) % 100, 100, 100);
+      //fill((i * (100.0/numRects) + rot) % 100, 100, 100);
+      color clr = color((i * (100.0/numRects) + rot) % 100, 100, 100);
       // draw a rectangle for each average, multiply the value by spectrumScale so we can see it better
-      rect(i*w, height, i*w + w, height - (amp*spectrumScale));
+      //rect(i*w, height, i*w + w, height - (amp*spectrumScale));
+      drawEqBand(i*w, height, i*w +w, height - (amp*spectrumScale), clr);
       if (amp > currentPeak) {
          currentPeak =  amp;
       }
@@ -135,4 +139,17 @@ void draw()
 
 }
 
+void drawEqBand(float x1, float y1, float x2, float y2, color c) {
+  PShape s = createShape(LINE);
+  s.beginShape();
+  s.setStroke(c);
+  s.setStrokeWeight(2);
+  s.vertex(x1, y1);
+  s.vertex(x1, y2);
+  s.vertex(x2, y2);
+  s.vertex(x2, y1);
+  s.vertex(x1, y1);
+  s.endShape();
+  shape(s, 0, 0);
+}
 
