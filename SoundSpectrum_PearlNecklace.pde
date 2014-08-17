@@ -128,8 +128,12 @@ void draw()
          currentPeak =  amp;
       }
     }
-    translate(sin(rot)*6, 0);
+    pushMatrix();
+    translate(0,0, abs(100*sin(radians(rot))));
+    rotateZ(sin(radians(rot)));
     shape(s);
+    popMatrix();
+
     if (currentPeak > maxPeak || ((System.nanoTime() - peakTime) > TIMESINCELASTPEAK )) {
       maxPeak = currentPeak;
       peakTime = System.nanoTime();
