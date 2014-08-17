@@ -81,11 +81,11 @@ void draw()
   // note that if jingle were a MONO file, this would be the same as using jingle.left or jingle.right
   fftLin.forward( in.mix );
   fftLog.forward( in.mix );
-
+  
   // no more outline, we'll be doing filled rectangles from now
   noStroke();
 
-  float numRects = (fftLin.avgSize()/5.0);
+  float numRects = (fftLog.avgSize()/1.0);
   // draw the linear averages
   {
     // since linear averages group equal numbers of adjacent frequency bands
@@ -96,8 +96,10 @@ void draw()
     {
       fill(i * (100.0/numRects), 100, 100);
       // draw a rectangle for each average, multiply the value by spectrumScale so we can see it better
-      rect(i*w, height, i*w + w, height - fftLin.getAvg(i)*spectrumScale);
+      rect(i*w, height, i*w + w, height - fftLog.getAvg(i)*spectrumScale);
     }
   }
+
 }
+
 
