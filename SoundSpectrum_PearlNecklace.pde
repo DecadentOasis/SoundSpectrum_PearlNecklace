@@ -49,7 +49,7 @@ void setup()
   height3 = height/3;
   height23 = 2*height/3;
 
-  colorMode(HSB, 100, 100, 100, 100);
+  colorMode(HSB, 360, 100, 100, 100);
 
   minim = new Minim(this);
   in = minim.getLineIn();
@@ -76,12 +76,12 @@ void setup()
 }
 
 float rot = 0;
-float rotIncr = 0.1;
+float rotIncr = 0.4;
 
 
 void draw()
 {
-  if (rot > 100) {
+  if (rot >= 360) {
     rot = 0.0;
   }
   rot += rotIncr;
