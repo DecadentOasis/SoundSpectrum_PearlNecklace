@@ -45,9 +45,25 @@ PFont font;
 int hLeds = 160;
 int vLeds = 40;
 
+boolean sketchFullScreen() {
+  return true;
+}
+
+public int sketchWidth() {
+  return displayWidth;
+}
+
+public int sketchHeight() {
+  return displayHeight;
+}
+
+public String sketchRenderer() {
+  return P3D;
+}
+
 void setup()
 {
-  size(hLeds * 3, vLeds * 6, P3D);
+  //size(hLeds * 6, vLeds * 12, P3D);
   cam = new PeasyCam(this, width/2.0, height/2.0, 0, 200);
   cam.setMinimumDistance(50);
   cam.setMaximumDistance(500);
@@ -87,10 +103,10 @@ void draw()
     rot = 0.0;
   }
   rot += rotIncr;
-  
+
   PImage c = get();
   image(c, 0, 1);
-  
+
   fill(0, 0, 0, 2);
   rect(0, 0, width, height);
 
@@ -103,7 +119,7 @@ void draw()
   // note that if jingle were a MONO file, this would be the same as using jingle.left or jingle.right
   fftLin.forward( in.mix );
   fftLog.forward( in.mix );
-  
+
   // no more outline, we'll be doing filled rectangles from now
   strokeWeight(2);
 
@@ -127,11 +143,11 @@ void draw()
       //rect(i*w, height, i*w + w, height - (amp*spectrumScale));
       drawEqBand(i*w, height, i*w +w, height - (amp*spectrumScale), clr, s);
       if (amp > currentPeak) {
-         currentPeak =  amp;
+        currentPeak =  amp;
       }
     }
     pushMatrix();
-    translate(0,0, abs(100*sin(radians(rot))));
+    translate(0, 0, abs(100*sin(radians(rot))));
     rotateZ(radians(rot));
     shape(s);
     rotate(HALF_PI);
@@ -146,12 +162,10 @@ void draw()
       maxPeak = currentPeak;
       peakTime = System.nanoTime();
     }
-    
+
     // now we have a reasonable peak, let's figure out what the scale should be
     spectrumScale = height / maxPeak;
-    
   }
-
 }
 
 void drawEqBand(float x1, float y1, float x2, float y2, color c, PShape parent) {
