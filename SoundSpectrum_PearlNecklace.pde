@@ -130,7 +130,7 @@ void draw()
     }
     pushMatrix();
     translate(0,0, abs(100*sin(radians(rot))));
-    rotateZ(sin(radians(rot)));
+    rotateZ(radians(rot));
     shape(s);
     rotate(HALF_PI);
     shape(s);
