@@ -128,7 +128,13 @@ void draw()
          currentPeak =  amp;
       }
     }
-    translate(sin(rot)*6, 0);
+    //translate(sin(rot)*6, 0);
+    //rotateX(abs(sin(rot))/10.0);
+    float bass = (float)Math.pow((fftLog.getAvg(1)), 0.4);
+    //translate(0,0, abs(100*sin(rot)));
+    translate(0,0, bass*10);
+    //rotateY(sin(rot)/10.0);
+    //rotateZ(sin(rot)/10.0);
     shape(s);
     if (currentPeak > maxPeak || ((System.nanoTime() - peakTime) > TIMESINCELASTPEAK )) {
       maxPeak = currentPeak;
