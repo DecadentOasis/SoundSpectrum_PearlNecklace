@@ -25,7 +25,9 @@
 
 import ddf.minim.analysis.*;
 import ddf.minim.*;
+import peasy.*;
 
+PeasyCam cam;
 Minim minim;  
 AudioInput in;
 
@@ -46,9 +48,9 @@ int vLeds = 40;
 void setup()
 {
   size(hLeds * 3, vLeds * 6, P3D);
-  height3 = height/3;
-  height23 = 2*height/3;
-
+  cam = new PeasyCam(this, width/2.0, height/2.0, 0, 200);
+  cam.setMinimumDistance(50);
+  cam.setMaximumDistance(500);
   colorMode(HSB, 360, 100, 100, 100);
 
   minim = new Minim(this);
