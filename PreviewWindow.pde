@@ -30,7 +30,7 @@ public class previewWindow extends PApplet {
 
 public class PreviewWindowFrame extends JFrame {
   public PreviewWindowFrame() {
-    setBounds(10, 10, displayWidth/4, displayHeight/4);
+    setBounds(10, 10, displayWidth/2, displayHeight/2);
     mApplet = new previewWindow();
     add(mApplet);
     mApplet.init();
@@ -38,8 +38,8 @@ public class PreviewWindowFrame extends JFrame {
     setVisible(true);
   }
   
-  public void plotPixel(int x, int y, int c) {
-    mApplet.plotPixel(x, y, c);
+  public void plotPixel(float x, float y, int c) {
+    mApplet.plotPixel(int(x * 2.0), int(y * 2.0), c);
   }
   
   public void redraw() {
@@ -54,7 +54,7 @@ void updatePreview() {
       int ix, iy;
       ix = int(x);
       iy = int(y);
-      mPreviewWindowFrame.plotPixel(ix, iy, pixels[iy*width+ix]);
+      mPreviewWindowFrame.plotPixel(x, y, pixels[iy*width+ix]);
     }
   }
   mPreviewWindowFrame.redraw();
