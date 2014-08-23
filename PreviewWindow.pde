@@ -1,7 +1,7 @@
 import javax.swing.JFrame;
 
 int hLeds = 160;
-int vLeds = 30;
+int vLeds = 11;
 
 previewWindow mApplet;
 

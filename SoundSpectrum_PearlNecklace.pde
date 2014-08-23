@@ -26,6 +26,10 @@
 import ddf.minim.analysis.*;
 import ddf.minim.*;
 import peasy.*;
+import com.heroicrobot.dropbit.registry.*;
+import com.heroicrobot.dropbit.devices.pixelpusher.Pixel;
+import com.heroicrobot.dropbit.devices.pixelpusher.Strip;
+import java.util.*;
 
 PeasyCam cam;
 Minim minim;  
@@ -42,6 +46,9 @@ long peakTime = 0;
 final static long TIMESINCELASTPEAK = (1000000000 * 15); // 15 seconds
 PFont font;
 PreviewWindowFrame mPreviewWindowFrame;
+boolean use_preview = false;
+DeviceRegistry registry;
+PusherObserver observer;
 
 boolean sketchFullScreen() {
   return false;
@@ -89,7 +96,13 @@ void setup()
 
   rectMode(CORNERS);
   background(0);
-  mPreviewWindowFrame = new PreviewWindowFrame();
+  if (use_preview) {
+    mPreviewWindowFrame = new PreviewWindowFrame();
+  }
+  registry = new DeviceRegistry();
+  observer = new PusherObserver();
+  registry.addObserver(observer);
+  registry.setAntiLog(true);
   
 }
 
@@ -121,7 +134,7 @@ void draw()
   fftLog.forward( in.mix );
 
   // no more outline, we'll be doing filled rectangles from now
-  
+
 
   float numRects = (fftLog.avgSize()/2.0);
   // draw the linear averages
@@ -157,9 +170,10 @@ void draw()
     rotate(HALF_PI);
     shape(s);
     popMatrix();
-    
-    updatePreview();
 
+    if (use_preview) {
+      updatePreview();
+    }
     if (currentPeak > maxPeak || ((System.nanoTime() - peakTime) > TIMESINCELASTPEAK )) {
       maxPeak = currentPeak;
       peakTime = System.nanoTime();
@@ -168,6 +182,7 @@ void draw()
     // now we have a reasonable peak, let's figure out what the scale should be
     spectrumScale = height / maxPeak;
   }
+  scrape();
 }
 
 void drawEqBand(float x1, float y1, float x2, float y2, color c, PShape parent) {
@@ -183,5 +198,4 @@ void drawEqBand(float x1, float y1, float x2, float y2, color c, PShape parent) 
   s.endShape();
   parent.addChild(s);
 }
-
 
